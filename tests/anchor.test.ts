@@ -1,34 +1,33 @@
-// No imports needed: web3, anchor, pg and more are globally available
+import * as anchor from "@coral-xyz/anchor";
 
-describe("Test", () => {
-  it("initialize", async () => {
-    // Generate keypair for the new account
-    const newAccountKp = new web3.Keypair();
+describe("tienda-xiaomi", () => {
 
-    // Send transaction
-    const data = new BN(42);
-    const txHash = await pg.program.methods
-      .initialize(data)
+  const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
+
+  const program = anchor.workspace.TiendaXiaomi;
+
+  it("Crear celular Xiaomi", async () => {
+
+    const celular = anchor.web3.Keypair.generate();
+
+    await program.methods
+      .crearCelular(
+        "Xiaomi 13",
+        new anchor.BN(12000),
+        256,
+        "Negro",
+        10
+      )
       .accounts({
-        newAccount: newAccountKp.publicKey,
-        signer: pg.wallet.publicKey,
-        systemProgram: web3.SystemProgram.programId,
+        celular: celular.publicKey,
+        user: provider.wallet.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
       })
-      .signers([newAccountKp])
+      .signers([celular])
       .rpc();
-    console.log(`Use 'solana confirm -v ${txHash}' to see the logs`);
 
-    // Confirm transaction
-    await pg.connection.confirmTransaction(txHash);
-
-    // Fetch the created account
-    const newAccount = await pg.program.account.newAccount.fetch(
-      newAccountKp.publicKey
-    );
-
-    console.log("On-chain data is:", newAccount.data.toString());
-
-    // Check whether the data on-chain is equal to local 'data'
-    assert(data.eq(newAccount.data));
+    console.log("Celular creado");
   });
+
 });
