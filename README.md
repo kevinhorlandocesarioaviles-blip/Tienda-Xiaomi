@@ -1,60 +1,112 @@
-# Biblioteca en Solana
+📱 XiaomiChain — Gestión de Tienda Xiaomi en Solana
 
-![banner](./images/banner-biblioteca.jpg)
+XiaomiChain es un programa on-chain desarrollado en Rust con Anchor sobre la blockchain de Solana. Permite a los dueños de tiendas gestionar su inventario de celulares Xiaomi de forma descentralizada, transparente e inmutable.
 
-CRUD básico de un Solana Program desarrollado con Rust y Anchor desde el Solana Playground. 
+📌 ¿Qué hace el proyecto?
 
-Puedes comenzar dándole Fork a este repositorio (abajo te explicamos como 👇), **hemos preparado un entorno de codespaces listo para que no tengas que instalar nada**, solo déjate llevar por la fluidez de los ejercicios y temas desarrollados especialmente para ti. 
+XiaomiChain implementa un sistema CRUD completo para administrar una tienda de celulares Xiaomi:
 
-Asegúrate de clonar este repositorio a tu cuenta usando el botón **`Fork`**.
+Crear una tienda vinculada a la wallet del propietario
 
-![fork](./images/fork.png)
+Registrar celulares Xiaomi en el inventario
 
-## Importando el proyecto 
+Eliminar celulares del inventario
 
-Ya con el repositorio en tu cuenta lo siguiente que debes hacer copiar el `enlace de tu repositorio`, lo que se puede hacer directamente desdel navegador:
+Activar o desactivar la disponibilidad de un celular
 
-![repo](./images/repo.png)
-Posteriormente, lo uniremos con el siguiente enlace en nuestro navegador de preferencia:
+Actualizar el stock de unidades disponibles
 
-```url
-https://beta.solpg.io/
-```
+Cada tienda y cada celular son cuentas derivadas (PDA) únicas en Solana, lo que garantiza que:
 
-Lo que nos dará algo parecido a:
+No puede haber registros duplicados
 
-![url](./images/url.png)
+Solo el propietario autorizado puede modificar su inventario
 
-Al pulsar enter seremos enviados al `Solana Playground` con nuestro proyecto abierto:
+🏗️ Arquitectura
+Owner (Wallet)
+    │
+    └── Tienda Xiaomi (PDA)
+            │
+            ├── Celular Xiaomi 13 (PDA)
+            ├── Celular Redmi Note 13 (PDA)
+            └── Celular Poco X6 (PDA)
 
-![pg](./images/pg.png)
+El propietario controla su tienda y gestiona los celulares registrados en ella.
 
-Para guardarlo solo damos clic en el boton `import` y asignamos un nombre:
+📦 Estructuras principales
+Tienda
+Campo	Tipo	Descripción
+owner	Pubkey	Wallet del dueño de la tienda
+nombre	String	Nombre de la tienda
+celulares	Vec<Pubkey>	Lista de celulares registrados
+Celular
+Campo	Tipo	Descripción
+tienda	String	Nombre de la tienda
+modelo	String	Modelo del celular Xiaomi
+precio	u64	Precio del celular
+stock	u16	Cantidad disponible en inventario
+disponible	bool	Estado del celular en venta
+⚙️ Instrucciones (Funciones del programa)
+Instrucción	Descripción
+crear_tienda(nombre)	Crea la cuenta de la tienda vinculada al propietario
+registrar_celular(modelo, precio, stock)	Registra un nuevo celular Xiaomi en el inventario
+eliminar_celular(modelo)	Elimina un celular del inventario
+alternar_disponibilidad(modelo)	Activa o desactiva la venta del celular
+actualizar_stock(modelo, stock)	Actualiza la cantidad disponible del celular
+🔐 PDA (Direcciones derivadas del programa)
 
-![import](./images/import.png)
+Las cuentas se derivan con las siguientes semillas:
 
-## Preparacion del entorno
+Tienda
 
-Primero conectaremos el entorno con la devnet, lo que tambien procederá a la creación de una wallet. Para eso daremos clic en donde dice **Not Conected**:
+["tienda", nombre_tienda, owner_pubkey]
 
-![playground1](./images/playground1.png)
+Celular
 
-Saldrá la siguiente ventana donde daremos en el botón **Continue**:
+["celular", modelo_celular, owner_pubkey]
 
-![wallet](./images/wallet.png)
+Esto garantiza que:
 
-Como resultado se mostrará la siguiente información:
+Cada propietario tiene su propia tienda única.
 
-![status](./images/status.png)
+No pueden existir dos celulares con el mismo modelo registrados por el mismo propietario.
 
-* En verde: el estado de la conexión y el entorno al que se encuentra conectado
+Solo el dueño puede administrar su inventario.
 
-* En amarillo: la la dirección de la wallet conectada
+🚀 Cómo usar el proyecto (Solana Playground)
 
-* En azul: la cantidad de tokens en la wallet
+Abrir Solana Playground
 
-> ℹ️ ¿Quieres ver el ejemplo de un "Hola Mundo" en Solana?. Da clic aquí: 👉 [Ver Ejemplo](https://github.com/WayLearnLatam/Solana-starter-kit/tree/1fc6349ba63375a3fe223d8d56911bc64765459b/build-deploy)
+Crear o hacer fork del proyecto
 
-> ℹ️ ¿Cuentas con una Wallet de [Phantom](https://phantom.com/) que deseas importar?, Da clic aquí para ver como hacerlo: 
+Conectar la wallet en Devnet
 
-👉 [Como Importar una Wallet](https://github.com/WayLearnLatam/Solana-starter-kit/tree/1fc6349ba63375a3fe223d8d56911bc64765459b/import-key-a-playground)
+Compilar y desplegar el programa
+
+Usar las instrucciones para interactuar con el sistema.
+
+Ejemplo de flujo de uso
+
+crear_tienda("XiaomiStore")
+
+registrar_celular("Xiaomi 13", 12000, 10)
+
+alternar_disponibilidad("Xiaomi 13") → desactiva venta
+
+actualizar_stock("Xiaomi 13", 20) → actualiza inventario
+
+eliminar_celular("Xiaomi 13") → elimina del inventario
+
+🛠️ Tecnologías
+
+Solana — Blockchain de alta velocidad
+
+Anchor Framework — Framework para programas en Solana
+
+Rust — Lenguaje del programa
+
+Solana Playground — Entorno para compilar y desplegar
+
+👤 Autor
+
+Proyecto desarrollado como ejemplo de gestión descentralizada de inventario para una tienda Xiaomi en Solana.
