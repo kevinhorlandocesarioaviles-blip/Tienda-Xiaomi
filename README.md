@@ -110,3 +110,5 @@ Solana Playground — Entorno para compilar y desplegar
 👤 Autor
 
 Proyecto desarrollado como ejemplo de gestión descentralizada de inventario para una tienda Xiaomi en Solana.
+
+Proyecto desarrollado como ejemplo de gestión descentralizada de inventario para una tienda Xiaomi en Solana.
